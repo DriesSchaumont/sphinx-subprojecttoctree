@@ -89,9 +89,10 @@ def check_if_html_builder(app):
         sys.exit(1)
 
 def remove_master(app, env):
-    env.found_docs.remove('master__')
-    del env.all_docs['master__']
-    (Path(app.doctreedir) / "master__.doctree").unlink()
+    if is_subproject(app.config):
+        env.found_docs.remove('master__')
+        del env.all_docs['master__']
+        (Path(app.doctreedir) / "master__.doctree").unlink()
 
 def setup(app):
     project_name = os.getenv('READTHEDOCS_PROJECT')
