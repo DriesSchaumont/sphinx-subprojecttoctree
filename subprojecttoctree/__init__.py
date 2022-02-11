@@ -54,9 +54,10 @@ def add_master_toctree_to_index(app, doctree):
             found_toctree.attributes['entries'] = new_entries
 
 def read_master_first(app, env, docnames):
-    app.builder.read_doc('master__')
-    if 'master__' in docnames:
-        docnames.remove('master__')
+    if is_subproject(app.config):
+        app.builder.read_doc('master__')
+        if 'master__' in docnames:
+            docnames.remove('master__')
     (Path(app.srcdir)/"master__.rst").unlink(missing_ok=True)
 
 def add_master_file(app, config):
