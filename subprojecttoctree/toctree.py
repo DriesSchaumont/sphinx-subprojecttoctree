@@ -26,29 +26,33 @@ class SubprojectTocTree(TocTree):
         to_add_later = {}
         removal_index_shift = 0 # Needed because self.content.remove(entry) does not work
         content_old = deepcopy(self.content)
-        
+        mocked_found_docs = []
         for i, entry in enumerate(self.content):
             if not entry:
                 continue
             # Parse entries in the form 'title <ref>'
             explicit = explicit_title_re.match(entry)
-            if explicit:
-                ref = explicit.group(2)
-                title = explicit.group(1)
-                subproject = subproject_re.match(ref) # ref is 'subproject: ...'
-                if subproject:
-                    subproject_relative_path = subproject.group(1).strip()
-                    if subproject_relative_path:
-                        ref = (f"{master_readthedocs_url}/projects/{subproject_relative_path}"
-                               f"/{language}/{version}/index.html")
-                        to_add_later[i] = (title, ref)
-                        # Remove from self.content, but not from the parents.
-                        # So we do not use self.content.remove()
-                        del self.content.data[i + removal_index_shift]
-                        del self.content.items[i + removal_index_shift]
-                        removal_index_shift -= 1
-                    else:
-                        logger.warning('No subproject name found after "subproject:" tag.')
+            if not explicit:
+                mocked_found_docs.append(entry)
+                continue
+            ref = explicit.group(2)
+            title = explicit.group(1)
+            subproject = subproject_re.match(ref) # ref is 'subproject: ...'
+            if not subproject:
+                mocked_found_docs.append(ref)
+                continue
+            subproject_relative_path = subproject.group(1).strip()
+            if subproject_relative_path:
+                ref = (f"{master_readthedocs_url}/projects/{subproject_relative_path}"
+                        f"/{language}/{version}/index.html")
+                to_add_later[i] = (title, ref)
+                # Remove from self.content, but not from the parents.
+                # So we do not use self.content.remove()
+                del self.content.data[i + removal_index_shift]
+                del self.content.items[i + removal_index_shift]
+                removal_index_shift -= 1
+            else:
+                logger.warning('No subproject name found after "subproject:" tag.')
         # We downloaded the 'master__' document, but it contains entries
         # which are not files in this source dir.
         # We presume that these entries reference existing html documents
@@ -56,7 +60,7 @@ class SubprojectTocTree(TocTree):
         # Otherwise they would have been removed.
         orig_found_docs = self.env.found_docs.copy()
         if is_subproject(self.config) and toctree.attributes['parent'] == "master__":
-            to_add = set(self.content) 
+            to_add = set(mocked_found_docs) 
             self.env.found_docs.update(to_add)
         ret = super().parse_content(toctree)
 
