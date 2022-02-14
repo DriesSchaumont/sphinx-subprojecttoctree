@@ -87,12 +87,6 @@ def check_internet_connection():
                      "working internet connection")
         sys.exit(1)
 
-def check_if_html_builder(app):
-    builder = app.builder
-    if builder.format != 'html':
-        logger.error('Subprojecttoctree only supports html builds.')
-        sys.exit(1)
-
 def remove_master(app, env):
     if is_subproject(app.config):
         env.found_docs.remove('master__')
@@ -113,7 +107,6 @@ def setup(app):
     app.connect('config-inited', add_master_file)
     app.connect('doctree-read', add_master_toctree_to_index)
     app.connect('env-updated', remove_master)
-    app.connect('builder-inited', check_if_html_builder)
     return {
         'version': '0.1',
         'parallel_read_safe': False,
