@@ -37,21 +37,24 @@ def add_master_toctree_to_index(app, doctree):
                                        f"{subproject_name}/"
                                        f"{language}/{version}/index.html")
         toctrees = list(doctree.findall(ToctreeNode))
-        for found_toctree in toctrees:
-            new_entries = []
-            for title, entry in app.env.master_entries:
-                parsed_entry = urlparse(entry)
-                if parsed_entry.netloc \
-                   and parsed_entry.path == this_subproject_url.path:
-                    # To retain order from master index, only add subproject 
-                    # index entries when the subproject is found in the master index
-                    new_entries.extend(found_toctree.attributes['entries'])
-                else:
-                    # Master index entries are added as urls
-                    new_entry = (f'{master_readthedocs_url}/{language}'
-                                 f'/{version}/{entry}.html')
-                    new_entries.append((title, new_entry))
-            found_toctree.attributes['entries'] = new_entries
+        if len(toctrees) > 1:
+            logger.warning('Found multiple toctrees in subproject index. '
+                           'Only adding master toctree entries to first toctree.')
+        toctree = toctrees[0]
+        new_entries = []
+        for title, entry in app.env.master_entries:
+            parsed_entry = urlparse(entry)
+            if parsed_entry.netloc \
+                and parsed_entry.path == this_subproject_url.path:
+                # To retain order from master index, only add subproject 
+                # index entries when the subproject is found in the master index
+                new_entries.extend(toctree.attributes['entries'])
+            else:
+                # Master index entries are added as urls
+                new_entry = (f'{master_readthedocs_url}/{language}'
+                                f'/{version}/{entry}.html')
+                new_entries.append((title, new_entry))
+        toctree.attributes['entries'] = new_entries
 
 def read_master_first(app, env, docnames):
     if is_subproject(app.config):
