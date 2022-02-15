@@ -9,3 +9,5 @@ __pycache__
 
 subprojecttoctree/__version__.py
 .venv
+
+.tox
