@@ -11,3 +11,5 @@ subprojecttoctree/__version__.py
 .venv
 
 .tox
+.coverage
+coverage.xml
