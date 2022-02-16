@@ -7,6 +7,7 @@ from typing import List
 from docutils.nodes import Node
 from sphinx.util.nodes import explicit_title_re
 import re
+import sys
 from copy import deepcopy
 from .utils import get_normalized_master_url, is_subproject
 
@@ -40,6 +41,11 @@ class SubprojectTocTree(TocTree):
             if not subproject:
                 mocked_found_docs.append(ref)
                 continue
+            if is_subproject(self.config) and toctree['parent'] != 'master__':
+                logger.error("Nested subprojects are not allowed. "
+                             "Either tag this project as the master by using 'is_subproject=False',"
+                             "or remove the subproject entry from the index.")
+                sys.exit(1)
             subproject_relative_path = subproject.group(1).strip()
             if subproject_relative_path:
                 ref = (f"{master_readthedocs_url}/projects/{subproject_relative_path}"

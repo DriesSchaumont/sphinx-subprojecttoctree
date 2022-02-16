@@ -112,6 +112,18 @@ def test_build_subproject_master_already_present(master_index, app_params, make_
     app.build()
     assert not existing_master_file.exists()
 
+@pytest.mark.sphinx('html', testroot='subprojecttoctree-subproject-nested')
+def test_build_subproject_nested_raises(master_index, app_params, make_app, caplog):
+    args, kwargs = app_params
+    app = make_app(*args, **kwargs)
+    with pytest.raises(SystemExit) as err:
+        app.build()
+    assert caplog.record_tuples == [('subprojecttoctree.toctree',
+                                     logging.ERROR,
+                                     "Nested subprojects are not allowed. "
+                                     "Either tag this project as the master by using 'is_subproject=False',"
+                                     "or remove the subproject entry from the index.")]
+
 @pytest.mark.sphinx('html', testroot='subprojecttoctree-subproject')
 def test_build_subproject_url_not_set(master_index, app_params, make_app, caplog):
     args, kwargs = app_params
