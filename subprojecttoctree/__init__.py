@@ -55,6 +55,8 @@ def add_master_toctree_to_index(app, doctree):
                                 f'/{version}/{entry}.html')
                 new_entries.append((title, new_entry))
         toctree.attributes['entries'] = new_entries
+        env_toctree = list(app.env.tocs['index'].findall(ToctreeNode))[0]
+        env_toctree['entries'] = new_entries
 
 def read_master_first(app, env, docnames):
     if is_subproject(app.config):

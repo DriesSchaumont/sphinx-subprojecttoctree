@@ -1,12 +1,11 @@
 
 import os
 from sphinx.directives.other import TocTree
-
+import logging
 from sphinx import addnodes
 from typing import List
 from docutils.nodes import Node
 from sphinx.util.nodes import explicit_title_re
-from sphinx.util import logging
 import re
 from copy import deepcopy
 from .utils import get_normalized_master_url, is_subproject
