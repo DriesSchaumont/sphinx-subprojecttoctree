@@ -13,3 +13,5 @@ subprojecttoctree/__version__.py
 .tox
 .coverage
 coverage.xml
+
+docs/build
