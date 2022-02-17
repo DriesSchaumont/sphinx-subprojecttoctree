@@ -15,30 +15,31 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
+from pkg_resources import get_distribution
 
 # -- Project information -----------------------------------------------------
 
-project = 'Subprojecttoctree'
-copyright = '2022, Dries Schaumont'
-author = 'Dries Schaumont'
+project = "Subprojecttoctree"
+copyright = "2022, Dries Schaumont"
+author = "Dries Schaumont"
 
 
 # The full version, including alpha/beta/rc tags
-from pkg_resources import get_distribution
-release = get_distribution('sphinx-subprojecttoctree').version
-if os.environ.get('READTHEDOCS') == 'True':
-    version = '.'.join(release.split('.')[:2])
+
+release = get_distribution("sphinx-subprojecttoctree").version
+if os.environ.get("READTHEDOCS") == "True":
+    version = ".".join(release.split(".")[:2])
 else:
     version = release
-    
+
 release = version
 # -- General configuration ---------------------------------------------------
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -46,7 +47,7 @@ master_doc = 'index'
 extensions = ["sphinx_issues"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -54,8 +55,8 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 
-issues_uri = 'https://github.com/DriesSchaumont/sphinx-subprojecttoctree/issues/{issue}'
-issues_pr_uri = 'https://github.com/DriesSchaumont/sphinx-subprojecttoctree/pull/{pr}'
+issues_uri = "https://github.com/DriesSchaumont/sphinx-subprojecttoctree/issues/{issue}"
+issues_pr_uri = "https://github.com/DriesSchaumont/sphinx-subprojecttoctree/pull/{pr}"
 
 # -- Options for HTML output -------------------------------------------------
 
