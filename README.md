@@ -8,7 +8,10 @@ by creating a unified sidebar of URLs between these projects. A single 'master' 
 is specified in the 'main' project, eliminating the need to update all subprojects 
 to change the index and allowing for version-specific sidebar links.
 
-# How to install
+## Documentation
+The documentation can be found [here](https://sphinx-subprojecttoctree.readthedocs.io/).
+
+## How to install
 Before installing, it is recommended to create a virtual environment first.
 Learn more about virtual environments [here](https://docs.python.org/3/tutorial/venv.html).
 
@@ -22,14 +25,14 @@ pip install sphinx-subprojecttoctree
 More information can be found in the 
 [documentation](https://sphinx-subprojecttoctree.readthedocs.io/en/latest/installation.html)
 
-# Dependencies
-This project is a plugin for `sphinx`, and requires a working sphinx installation (4.4.x or newer).  
+## Dependencies
+This project is a plugin for [Sphinx](https://www.sphinx-doc.org).  
 
-# Python version support
-Python 3.8, 3.9 and 3.10 are officially supported
+## Python version support
+Python 3.8, 3.9 and 3.10 are officially supported.
 
-# Running the tests
-To run the tests,       
+## Running the tests
+To run the tests, execute ``tox``.
 
-# License
+## License
 [MIT](https://github.com/DriesSchaumont/sphinx-subprojecttoctree/blob/main/LICENSE)
