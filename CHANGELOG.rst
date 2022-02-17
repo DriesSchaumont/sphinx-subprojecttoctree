@@ -2,8 +2,11 @@
 Changelog
 *********
 
-0.2.0 (in development)
+0.2.1 (in development)
 ----------------------
+
+0.2.0 (17/02/2022)
+------------------
 * Fixed an issue where the master toctree entries would be added to all subproject root toctrees (:issue:`12`).
 * Do not raise when using a non-html builder (:issue:`14`).
 * Subprojecttoctree now raises an error when trying to create nested subprojects (:issue:`18`).
