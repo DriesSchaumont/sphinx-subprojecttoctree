@@ -10,7 +10,7 @@ jobs:
     strategy:      
       matrix:
         python-version: [3.8]
-        tox-env: [docs]
+        tox-env: [docs, black, flake8]
     steps:
     - uses: actions/checkout@v2
     - name: Using Python ${{ matrix.python-version }}
