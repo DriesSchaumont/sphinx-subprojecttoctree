@@ -29,8 +29,8 @@ def test_build_master_doc(app):
                                            ('SubprojectTitle',
                                             'http://example/projects/lorem/en/latest/index.html')]
 
-
-@pytest.mark.sphinx('html', testroot='subprojecttoctree-subproject')
+@pytest.mark.parametrize('', [pytest.param(marks=pytest.mark.sphinx('html', testroot='subprojecttoctree-subproject')),
+                              pytest.param(marks=pytest.mark.sphinx('html', testroot='subprojecttoctree-subproject-directive'))])
 def test_build_subproject(master_index, app):
     app.build()
     assert app.env.toc_num_entries['index'] == 1
