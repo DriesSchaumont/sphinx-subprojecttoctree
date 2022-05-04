@@ -29,7 +29,7 @@ class SubprojectTocTree(TocTree):
         )
         content_old = deepcopy(self.content)
         mocked_found_docs = []
-        for i, entry in enumerate(self.content):
+        for i, entry in enumerate(content_old):
             if not entry:
                 continue
             # Parse entries in the form 'title <ref>'
