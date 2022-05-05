@@ -2,8 +2,14 @@
 Changelog
 *********
 
-0.2.1 (in development)
+0.3.1 (in development)
 ----------------------
+
+0.3.0 (5/05/2022)
+-----------------
+* Fix the index file of a subproject not being updated when the master projecrt index is changed (:issue:`30`).
+* Fix an issue where entries in the master project index are not included when they are listed after a subproject (:issue:`28`).
+* Add missing request dependency (:issue:`25`).
 
 0.2.0 (17/02/2022)
 ------------------
