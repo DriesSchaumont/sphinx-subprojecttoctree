@@ -93,7 +93,7 @@ def check_internet_connection():
         socket.create_connection(("1.1.1.1", 53))
         return True
     except OSError:
-        logger.error("Subprojecttoctree requires a " "working internet connection")
+        logger.error("Subprojecttoctree requires a working internet connection")
         sys.exit(1)
 
 
