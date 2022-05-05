@@ -2,8 +2,12 @@
 Changelog
 *********
 
-0.3.1 (in development)
+0.3.2 (in development)
 ----------------------
+
+0.3.1 (5/05/2022)
+-----------------
+* When generating a subproject toc, correct links to other subprojects are now generated (:issue:`33`).
 
 0.3.0 (5/05/2022)
 -----------------

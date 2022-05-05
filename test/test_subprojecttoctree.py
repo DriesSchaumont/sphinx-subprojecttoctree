@@ -201,6 +201,65 @@ def test_build_subproject_entry_after_subproject(app_params, make_app, mocker):
     )
 
 
+@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+def test_build_subproject_multiple_master_subprojects(app_params, make_app, mocker):
+    master_index = dedent(
+        """\
+                          Dolor sit
+                          =========
+
+                          .. subprojecttoctree::
+                              amet
+                              test <subproject: foo>
+                              sed
+                              subproject2 <subproject: bar>
+                          """
+    )
+    mocked_response = mocker.Mock()
+    mocked_response.text = master_index
+    mocked_request = mocker.patch("requests.get")
+    mocked_request.return_value = mocked_response
+    args, kwargs = app_params
+    app = make_app(*args, **kwargs)
+
+    app.build()
+    assert app.env.toc_num_entries["index"] == 1
+    assert app.env.toctree_includes["index"] == ["foo", "bar"]
+    assert app.env.files_to_rebuild["foo"] == {"index"}
+    assert app.env.files_to_rebuild["bar"] == {"index"}
+    assert app.env.glob_toctrees == set()
+    assert app.env.numbered_toctrees == set()
+
+    index_toctree = app.env.tocs["index"]
+    assert_node(
+        index_toctree,
+        [bullet_list, ([list_item, (compact_paragraph, [bullet_list, (toctree)])])],
+    )
+    assert_node(index_toctree[0][0], [compact_paragraph, reference, "Lorem Ipsum"])
+    assert_node(index_toctree[0][0][0], reference, anchorname="")
+    assert_node(
+        index_toctree[0][1][0],
+        toctree,
+        caption=None,
+        glob=False,
+        hidden=False,
+        includehidden=False,
+        titlesonly=False,
+        maxdepth=-1,
+        entries=[
+            (None, "http://example/en/latest/amet.html"),
+            (None, "foo"),
+            (None, "bar"),
+            ("explicit_ref", "http://example.org"),
+            (None, "http://example/en/latest/sed.html"),
+            ("subproject2", "http://example/projects/bar/en/latest/index.html"),
+        ],
+        numbered=0,
+        includefiles=["foo", "bar"],
+        rawentries=["explicit_ref"],
+    )
+
+
 @pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject-multiple-toctrees")
 def test_build_subproject_multiple_subproject_toctrees(master_index, app, caplog):
     app.build()

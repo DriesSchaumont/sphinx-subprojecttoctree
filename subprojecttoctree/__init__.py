@@ -52,6 +52,9 @@ def add_master_toctree_to_index(app, doctree):
                 # To retain order from master index, only add subproject
                 # index entries when the subproject is found in the master index
                 new_entries.extend(toctree.attributes["entries"])
+            elif parsed_entry.scheme and parsed_entry.netloc:
+                # Entry is a url, add as is.
+                new_entries.append((title, entry))
             else:
                 # Master index entries are added as urls
                 new_entry = (
