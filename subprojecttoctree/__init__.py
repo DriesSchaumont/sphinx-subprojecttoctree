@@ -104,6 +104,10 @@ def remove_master(app, env):
         (Path(app.doctreedir) / "master__.doctree").unlink()
 
 
+def always_read_index(app, env, added, changed, removed):
+    return ["index"]
+
+
 def setup(app):
     project_name = os.getenv("READTHEDOCS_PROJECT")
     if not project_name:
@@ -116,6 +120,7 @@ def setup(app):
     app.add_config_value("readthedocs_url", None, "env", types=[str])
     app.add_config_value("is_subproject", None, "env", types=[bool])
     app.add_directive("subprojecttoctree", SubprojectTocTree)
+    app.connect("env-get-outdated", always_read_index)
     app.connect("env-before-read-docs", read_master_first)
     app.connect("config-inited", add_master_file)
     app.connect("doctree-read", add_master_toctree_to_index)
