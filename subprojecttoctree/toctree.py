@@ -24,9 +24,8 @@ class SubprojectTocTree(TocTree):
         # First do some custom parsing ourselves, then for other options default to
         # default parser.
         to_add_later = {}
-        removal_index_shift = (
-            0  # Needed because self.content.remove(entry) does not work
-        )
+        # Shift needed because self.content.remove(entry) does not work
+        removal_index_shift = 0
         content_old = deepcopy(self.content)
         mocked_found_docs = []
         for i, entry in enumerate(content_old):
