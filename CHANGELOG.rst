@@ -2,8 +2,11 @@
 Changelog
 *********
 
-0.3.2 (in development)
+0.4.1 (in development)
 ----------------------
+
+0.4.0 (30/08/2022)
+------------------
 * Support Sphinx 4.5, 5.0 and 5.1 (:issue:`35`).
 * Loosen requests dependency to major verion (:issue:`35`).
 
