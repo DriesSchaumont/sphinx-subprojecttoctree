@@ -37,6 +37,13 @@ def non_html_format_builders():
     return ["latex", "text", "man", "texinfo", "texinfo", "xml"]
 
 
+@pytest.fixture(autouse=True)
+def mock_internet_connection(mocker, request):
+    if "do_not_patch_connection" in request.keywords:
+        return
+    mocker.patch("socket.create_connection")
+
+
 @pytest.fixture
 def master_index(mocker):
     master_index = dedent(
