@@ -398,6 +398,7 @@ def test_build_subproject_wrong_subproject_format(app_params, make_app, mocker, 
     ]
 
 
+@pytest.mark.do_not_patch_connection
 @pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
 def test_build_no_working_internet_connection(app_params, make_app, mocker, caplog):
     mocked_connection = mocker.patch("socket.create_connection")
