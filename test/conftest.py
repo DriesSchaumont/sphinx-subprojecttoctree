@@ -39,7 +39,7 @@ def non_html_format_builders():
 
 @pytest.fixture(autouse=True)
 def mock_internet_connection(mocker, request):
-    if 'do_not_patch_connection' in request.keywords:
+    if "do_not_patch_connection" in request.keywords:
         return
     mocker.patch("socket.create_connection")
 
