@@ -28,7 +28,7 @@ jobs:
         os: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"]
         sphinx-version: ["sphinx44", "sphinx45", "sphinx50", "sphinx51", "sphinx52", "sphinx53"]
-        readthedocs-theme-version: [readthedocs100, readthedocs110]
+        readthedocs-theme-version: [ "readthedocs100", "readthedocs110"]
         include:
         - os: macos-latest
           python-version: 3.8
