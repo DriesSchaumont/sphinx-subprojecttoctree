@@ -7,7 +7,11 @@ import logging
 from pathlib import Path
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-master")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-master",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_master_doc(app):
     app.build()
     index_toctree = app.env.tocs["index"]
@@ -24,7 +28,11 @@ def test_build_master_doc(app):
     )
 
     assert app.env.toc_num_entries["index"] == 0
-    assert app.env.toctree_includes["index"] == ["foo", "bar"]
+    assert app.env.toctree_includes["index"] == [
+        "foo",
+        "bar",
+        "http://example/projects/lorem/en/latest/index.html",
+    ]
     assert app.env.files_to_rebuild["foo"] == {"index"}
     assert app.env.files_to_rebuild["bar"] == {"index"}
     assert app.env.glob_toctrees == set()
@@ -36,7 +44,51 @@ def test_build_master_doc(app):
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-master-entry-after-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-master-with-regular-http-url",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_subproject_together_with_regular_link(app):
+    app.build()
+    index_toctree = app.env.tocs["index"]
+    assert_node(index_toctree, [bullet_list, ([toctree])])
+    assert_node(
+        index_toctree[0],
+        toctree,
+        entries=[
+            (None, "foo"),
+            (None, "bar"),
+            ("SubprojectTitle", "http://example/projects/lorem/en/latest/index.html"),
+            ("example", "http://example.org/"),
+        ],
+        includefiles=["foo", "bar"],
+    )
+
+    assert app.env.toc_num_entries["index"] == 0
+    assert app.env.toctree_includes["index"] == [
+        "foo",
+        "bar",
+        "http://example/projects/lorem/en/latest/index.html",
+        "http://example.org/",
+    ]
+    assert app.env.files_to_rebuild["foo"] == {"index"}
+    assert app.env.files_to_rebuild["bar"] == {"index"}
+    assert app.env.glob_toctrees == set()
+    assert app.env.numbered_toctrees == set()
+    assert index_toctree[0]["entries"] == [
+        (None, "foo"),
+        (None, "bar"),
+        ("SubprojectTitle", "http://example/projects/lorem/en/latest/index.html"),
+        ("example", "http://example.org/"),
+    ]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-master-entry-after-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_master_doc_with_entry_after_subproject(app):
     app.build()
     index_toctree = app.env.tocs["index"]
@@ -54,7 +106,12 @@ def test_build_master_doc_with_entry_after_subproject(app):
     )
 
     assert app.env.toc_num_entries["index"] == 0
-    assert app.env.toctree_includes["index"] == ["foo", "bar", "ipsum"]
+    assert app.env.toctree_includes["index"] == [
+        "foo",
+        "bar",
+        "http://example/projects/lorem/en/latest/index.html",
+        "ipsum",
+    ]
     assert app.env.files_to_rebuild["foo"] == {"index"}
     assert app.env.files_to_rebuild["bar"] == {"index"}
     assert app.env.files_to_rebuild["bar"] == {"index"}
@@ -68,7 +125,11 @@ def test_build_master_doc_with_entry_after_subproject(app):
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject(master_index, app):
     app.build()
     assert app.env.toc_num_entries["index"] == 1
@@ -102,12 +163,21 @@ def test_build_subproject(master_index, app):
             ("explicit_ref", "http://example.org"),
         ],
         numbered=0,
-        includefiles=["foo", "bar"],
+        includefiles=[
+            "foo",
+            "bar",
+            "http://example/en/latest/amet.html",
+            "http://example/en/latest/sed.html",
+        ],
         rawentries=["explicit_ref"],
     )
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_multiple_master_toctrees(
     app_params, make_app, mocker, caplog
 ):
@@ -144,7 +214,11 @@ def test_build_subproject_multiple_master_toctrees(
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_entry_after_subproject(app_params, make_app, mocker):
     master_index = dedent(
         """\
@@ -196,12 +270,21 @@ def test_build_subproject_entry_after_subproject(app_params, make_app, mocker):
             (None, "http://example/en/latest/sed.html"),
         ],
         numbered=0,
-        includefiles=["foo", "bar"],
+        includefiles=[
+            "foo",
+            "bar",
+            "http://example/en/latest/amet.html",
+            "http://example/en/latest/sed.html",
+        ],
         rawentries=["explicit_ref"],
     )
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_multiple_master_subprojects(app_params, make_app, mocker):
     master_index = dedent(
         """\
@@ -255,12 +338,21 @@ def test_build_subproject_multiple_master_subprojects(app_params, make_app, mock
             ("subproject2", "http://example/projects/bar/en/latest/index.html"),
         ],
         numbered=0,
-        includefiles=["foo", "bar"],
+        includefiles=[
+            "foo",
+            "bar",
+            "http://example/en/latest/amet.html",
+            "http://example/en/latest/sed.html",
+        ],
         rawentries=["explicit_ref"],
     )
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject-multiple-toctrees")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject-multiple-toctrees",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_multiple_subproject_toctrees(master_index, app, caplog):
     app.build()
     assert caplog.record_tuples == [
@@ -273,7 +365,11 @@ def test_build_subproject_multiple_subproject_toctrees(master_index, app, caplog
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_master_already_present(master_index, app_params, make_app):
     _, kwargs = app_params
     existing_master_file = Path(kwargs["srcdir"] / "master__.rst")
@@ -284,7 +380,11 @@ def test_build_subproject_master_already_present(master_index, app_params, make_
     assert not existing_master_file.exists()
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject-nested")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject-nested",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_nested_raises(master_index, app_params, make_app, caplog):
     args, kwargs = app_params
     app = make_app(*args, **kwargs)
@@ -301,7 +401,11 @@ def test_build_subproject_nested_raises(master_index, app_params, make_app, capl
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_url_not_set(master_index, app_params, make_app, caplog):
     args, kwargs = app_params
     app = make_app(*args, **kwargs)
@@ -317,7 +421,11 @@ def test_build_subproject_url_not_set(master_index, app_params, make_app, caplog
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_is_subproject_not_set(
     master_index, app_params, make_app, caplog
 ):
@@ -335,7 +443,11 @@ def test_build_subproject_is_subproject_not_set(
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_url_wrong_protocol(
     master_index, app_params, make_app, caplog
 ):
@@ -353,7 +465,11 @@ def test_build_subproject_url_wrong_protocol(
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_url_wrong_netloc(master_index, app_params, make_app, caplog):
     args, kwargs = app_params
     app = make_app(*args, **kwargs)
@@ -369,7 +485,11 @@ def test_build_subproject_url_wrong_netloc(master_index, app_params, make_app, c
     ]
 
 
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_subproject_wrong_subproject_format(app_params, make_app, mocker, caplog):
     master_index = dedent(
         """\
@@ -399,7 +519,11 @@ def test_build_subproject_wrong_subproject_format(app_params, make_app, mocker, 
 
 
 @pytest.mark.do_not_patch_connection
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_build_no_working_internet_connection(app_params, make_app, mocker, caplog):
     mocked_connection = mocker.patch("socket.create_connection")
     mocked_connection.side_effect = OSError("Mocked connection")
@@ -416,7 +540,11 @@ def test_build_no_working_internet_connection(app_params, make_app, mocker, capl
 
 
 @pytest.mark.disable_env
-@pytest.mark.sphinx("html", testroot="subprojecttoctree-subproject")
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
 def test_no_env_variable_set(app_params, make_app, caplog):
     args, kwargs = app_params
     with pytest.raises(SystemExit):
@@ -430,3 +558,65 @@ def test_no_env_variable_set(app_params, make_app, caplog):
             "when building the documentation locally.",
         )
     ]
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_build_subproject_root_index_next_previous_links(master_index, app):
+    app.builder.build_all()
+    result = (app.outdir / "index.html").read_text(encoding="utf8")
+
+    # Check if the index html contains a 'previous' button
+    # that navigates to the last entry from the master project
+    assert (
+        '<a href="http://example/en/latest/sed.html" class="btn btn-neutral float-left" title="test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>'
+        in result
+    )
+
+    # Forward button should be a relative link to the next page
+    assert (
+        '<a href="foo.html" class="btn btn-neutral float-right" title="foo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>'
+        in result
+    )
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_subproject_root_index_next_previous_links(master_index, app):
+    app.builder.build_all()
+    result = (app.outdir / "index.html").read_text(encoding="utf8")
+
+    # Check if the index html contains a 'previous' button
+    # that navigates to the last entry from the master project
+    assert (
+        '<a href="http://example/en/latest/sed.html" class="btn btn-neutral float-left" title="test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>'
+        in result
+    )
+
+    # Forward button should be a relative link to the next page
+    assert (
+        '<a href="foo.html" class="btn btn-neutral float-right" title="foo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>'
+        in result
+    )
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-master",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_master_project_next_previous_links(app):
+    app.builder.build_all()
+    result = (app.outdir / "bar.html").read_text(encoding="utf8")
+
+    # Check if html containt a forward button to the first entry of the subproject
+    assert (
+        '<a href="http://example/projects/lorem/en/latest/index.html" class="btn btn-neutral float-right" title="SubprojectTitle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>'
+        in result
+    )
