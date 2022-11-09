@@ -5,6 +5,7 @@ Changelog
 0.4.1 (in development)
 ----------------------
 * Support Sphinx 5.2 and 5.3 (:pr:`43` and :pr:`44`)
+* Support sphinx-rtd-theme 1.1.* (:pr:`51`)
 
 0.4.0 (30/08/2022)
 ------------------
