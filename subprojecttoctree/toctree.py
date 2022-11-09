@@ -3,7 +3,7 @@ from sphinx.directives.other import TocTree
 import logging
 from sphinx import addnodes
 from typing import List
-from docutils.nodes import Node
+from docutils.nodes import Node, title, Text
 from sphinx.util.nodes import explicit_title_re
 import re
 import sys
@@ -37,7 +37,7 @@ class SubprojectTocTree(TocTree):
                 mocked_found_docs.append(entry)
                 continue
             ref = explicit.group(2)
-            title = explicit.group(1)
+            subproject_title = explicit.group(1)
             subproject = subproject_re.match(ref)  # ref is 'subproject: ...'
             if not subproject:
                 mocked_found_docs.append(ref)
@@ -55,7 +55,7 @@ class SubprojectTocTree(TocTree):
                     f"{master_readthedocs_url}/projects/{subproject_relative_path}"
                     f"/{language}/{version}/index.html"
                 )
-                to_add_later[i] = (title, ref)
+                to_add_later[i] = (subproject_title, ref)
                 # Remove from self.content, but not from the parents.
                 # So we do not use self.content.remove()
                 del self.content.data[i + removal_index_shift]
@@ -81,6 +81,11 @@ class SubprojectTocTree(TocTree):
         # Add our own custom parsed entries to the toctree entries
         for i, to_add in to_add_later.items():
             toctree["entries"].insert(i, to_add)
+
+            # Also add title for entry (needed for next buttons)
+            entry_title = title()
+            entry_title += Text(to_add[0])
+            self.env.titles[to_add[1]] = entry_title
 
         # Reset the content
         self.content = content_old

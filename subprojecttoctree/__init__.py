@@ -8,27 +8,39 @@ import requests
 import socket
 import logging
 from .utils import get_normalized_master_url, is_subproject
+from .builders import HTMLBuilder
+from docutils import nodes
 
 logger = logging.getLogger(__name__)
 
 
-def add_master_toctree_to_index(app, doctree):
-    if not is_subproject(app.config):
-        return
-    curr_docname = app.env.docname
-    if Path(doctree.attributes["source"]).name == "master__.rst":
-        # When parsing the master file, save the entries
-        # We parse this file first, so self.env.master_entries is always set
-        # when parsing the other docs
-        toctrees = list(doctree.document.findall(ToctreeNode))
-        if len(toctrees) != 1:
+def find_first_toctree(doctree, is_root_index):
+    toctrees = list(doctree.document.findall(ToctreeNode))
+    if len(toctrees) > 1:
+        if is_root_index:
             logger.error("Expecting only one toctree in master project index.")
             sys.exit(1)
-        toctree = toctrees[0]
-        app.env.master_entries = toctree.attributes["entries"]
-    elif curr_docname == "index":
+        else:
+            logger.warning(
+                "Found multiple toctrees in subproject index. Only adding master toctree entries to first toctree."
+            )
+    toctree = toctrees[0]
+    return toctree
+
+
+def add_master_toctree_to_index(app, doctree):
+    curr_docname = app.env.docname
+    if curr_docname == "master__" or (
+        not is_subproject(app.config) and curr_docname == "index"
+    ):
+        toctree = find_first_toctree(doctree, is_root_index=True)
+        entries = toctree.attributes["entries"]
+        app.env.master_entries = entries
+        targets = [target for _, target in entries]
+        toctree.attributes["includefiles"] = targets
+        app.env.toctree_includes[curr_docname] = targets
+    elif is_subproject(app.config) and curr_docname == "index":
         # Insert entries from master doc into subproject index as urls
-        assert app.env.master_entries
         subproject_name = os.getenv("READTHEDOCS_PROJECT")
         language = os.getenv("READTHEDOCS_LANGUAGE", default="en")
         version = os.getenv("READTHEDOCS_VERSION", default="latest")
@@ -38,39 +50,45 @@ def add_master_toctree_to_index(app, doctree):
             f"{subproject_name}/"
             f"{language}/{version}/index.html"
         )
-        toctrees = list(doctree.findall(ToctreeNode))
-        if len(toctrees) > 1:
-            logger.warning(
-                "Found multiple toctrees in subproject index. "
-                "Only adding master toctree entries to first toctree."
-            )
-        toctree = toctrees[0]
+        toctree = find_first_toctree(doctree, is_root_index=False)
         new_entries = []
+        last_master_entry = None
         for title, entry in app.env.master_entries:
             parsed_entry = urlparse(entry)
             if parsed_entry.netloc and parsed_entry.path == this_subproject_url.path:
                 # To retain order from master index, only add subproject
                 # index entries when the subproject is found in the master index
                 new_entries.extend(toctree.attributes["entries"])
+
+                # also store the last master index entry,
+                # so that we can use it to generate the previous
+                if last_master_entry:
+                    app.env.last_master_entry = last_master_entry
+                    last_entry_title = nodes.title()
+                    last_entry_title += nodes.Text(title)
+                    app.env.titles[last_master_entry] = last_entry_title
             elif parsed_entry.scheme and parsed_entry.netloc:
                 # Entry is a url, add as is.
                 new_entries.append((title, entry))
             else:
                 # Master index entries are added as urls
                 new_entry = (
-                    f"{master_readthedocs_url}/{language}" f"/{version}/{entry}.html"
+                    f"{master_readthedocs_url}/{language}/{version}/{entry}.html"
                 )
+                # TODO: Change to new_entries.append((entry, new_entry))
                 new_entries.append((title, new_entry))
+                toctree.attributes["includefiles"].append(new_entry)
+                last_master_entry = new_entry
         toctree.attributes["entries"] = new_entries
         env_toctree = list(app.env.tocs["index"].findall(ToctreeNode))[0]
         env_toctree["entries"] = new_entries
 
 
 def read_master_first(app, env, docnames):
-    if is_subproject(app.config):
-        app.builder.read_doc("master__")
-        if "master__" in docnames:
-            docnames.remove("master__")
+    index_name = "master__" if is_subproject(app.config) else "index"
+    app.builder.read_doc(index_name)
+    if index_name in docnames:
+        docnames.remove(index_name)
     (Path(app.srcdir) / "master__.rst").unlink(missing_ok=True)
 
 
@@ -128,6 +146,7 @@ def setup(app):
     app.connect("config-inited", add_master_file)
     app.connect("doctree-read", add_master_toctree_to_index)
     app.connect("env-updated", remove_master)
+    app.add_builder(HTMLBuilder, override=True)
     return {
         "version": "0.1",
         "parallel_read_safe": False,
