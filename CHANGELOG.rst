@@ -2,10 +2,14 @@
 Changelog
 *********
 
-0.4.1 (in development)
+0.5.1 (in development)
 ----------------------
+
+0.5.0 (9/11/2022)
+-----------------
 * Support Sphinx 5.2 and 5.3 (:pr:`43` and :pr:`44`)
 * Support sphinx-rtd-theme 1.1.* (:pr:`51`)
+* Fix an issue 'next' and 'previous' buttons were not being generated when they link to a subproject or master project (:issue:`45`)
 
 0.4.0 (30/08/2022)
 ------------------
