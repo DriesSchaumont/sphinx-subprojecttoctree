@@ -1,9 +1,15 @@
 from __future__ import annotations
-from sphinx.builders.html import StandaloneHTMLBuilder
 from .utils import is_subproject, get_normalized_master_url
 
+try:
+    from readthedocs_ext.readthedocs import (
+        ReadtheDocsSingleFileHTMLBuilderLocalMedia as BaseBuilder,
+    )
+except ImportError:
+    from sphinx.builders.html import StandaloneHTMLBuilder as BaseBuilder
 
-class HTMLBuilder(StandaloneHTMLBuilder):
+
+class HTMLBuilder(BaseBuilder):
     def prepare_writing(self, docnames) -> None:
         super().prepare_writing(docnames)
         if is_subproject(self.config):
