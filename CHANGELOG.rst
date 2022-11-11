@@ -4,6 +4,7 @@ Changelog
 
 0.5.1 (in development)
 ----------------------
+* Fixed an issue where the HTML builder was not compatible with the builder from readthedocs-sphinx-ext, causing `AttributeError` when building subprojects on readthedocs (:issue:`46`)
 
 0.5.0 (9/11/2022)
 -----------------
