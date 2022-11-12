@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         sphinx-version: ["sphinx44", "sphinx45", "sphinx50", "sphinx51", "sphinx52", "sphinx53"]
         readthedocs-theme-version: [ "theme100", "theme110"]
         sphinxextension: ["on", "off"]
