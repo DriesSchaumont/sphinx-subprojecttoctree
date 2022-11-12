@@ -2,8 +2,15 @@
 Changelog
 *********
 
-0.5.1 (in development)
+0.5.3 (in development)
 ----------------------
+
+0.5.2 (12/11/2022)
+------------------
+* Next and previous link now work when the sphinx readthedocs extension (readthedocs-sphinx-ext) is installed (which is the case with online builds) (:issue:`57`)
+
+0.5.1 (11/11/2022)
+------------------
 * Fixed an issue where the HTML builder was not compatible with the builder from readthedocs-sphinx-ext, causing `AttributeError` when building subprojects on readthedocs (:issue:`55`)
 
 0.5.0 (9/11/2022)
