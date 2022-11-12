@@ -3,6 +3,14 @@ from sphinx.testing.path import path
 from unittest import mock
 import os
 from textwrap import dedent
+from functools import wraps
+from sphinx.config import Config
+
+try:
+    import readthedocs_ext
+except ImportError:
+    readthedocs_ext = None
+
 
 # Sphinx provides a lot of utilities to test extensions
 # Load them here
@@ -35,6 +43,23 @@ def mock_settings_env_vars(request):
             yield
     else:
         yield
+
+
+@pytest.fixture()
+def make_app(make_app):
+    @wraps(make_app)
+    def wrapper(*args, **kwargs):
+        confoverwrites = kwargs.get("confoverrides", {})
+        sphinx_config = Config.read(kwargs["srcdir"])
+        new_extensions = sphinx_config.extensions
+        if readthedocs_ext:
+            new_extensions = ["readthedocs_ext.readthedocs"] + new_extensions
+        confoverwrites["extensions"] = new_extensions
+        kwargs["confoverrides"] = confoverwrites
+        app_ = make_app(*args, **kwargs)
+        return app_
+
+    yield wrapper
 
 
 @pytest.fixture
