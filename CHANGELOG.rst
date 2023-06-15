@@ -5,6 +5,7 @@ Changelog
 0.5.3 (in development)
 ----------------------
 * Officially support python 3.11 (by adding it to the tests) (:pr:`59`)
+* Add support for sphinx 6.0 (:pr:`63`)
 
 0.5.2 (12/11/2022)
 ------------------
