@@ -8,6 +8,7 @@ Changelog
 0.5.4 (25/08/2023)
 ------------------
 * Add support for sphinx 7.0 (:pr:`68`)
+* Loosen requests dependency to major version 2. (:pr:`69`)
 
 0.5.3 (15/06/2023)
 ------------------
