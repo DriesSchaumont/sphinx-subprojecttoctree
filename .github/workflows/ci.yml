@@ -12,7 +12,7 @@ jobs:
         python-version: [3.8]
         tox-env: [docs, black, flake8]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Using Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -43,7 +43,7 @@ jobs:
           sphinxextension: "on"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
