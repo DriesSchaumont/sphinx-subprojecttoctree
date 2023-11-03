@@ -60,10 +60,7 @@ def add_master_toctree_to_index(app, doctree):
                 # index entries when the subproject is found in the master index
                 new_entries.extend(toctree.attributes["entries"])
 
-                # also store the last master index entry,
-                # so that we can use it to generate the previous
                 if last_master_entry:
-                    app.env.last_master_entry = last_master_entry
                     last_entry_title = nodes.title()
                     last_entry_title += nodes.Text(title)
                     app.env.titles[last_master_entry] = last_entry_title
@@ -75,10 +72,13 @@ def add_master_toctree_to_index(app, doctree):
                 new_entry = (
                     f"{master_readthedocs_url}/{language}/{version}/{entry}.html"
                 )
-                # TODO: Change to new_entries.append((entry, new_entry))
-                new_entries.append((title, new_entry))
+                new_entries.append((entry, new_entry))
                 toctree.attributes["includefiles"].append(new_entry)
                 last_master_entry = new_entry
+
+                # also store the last master index entry,
+                # so that we can use it to generate the previous
+                app.env.last_master_entry = last_master_entry
         toctree.attributes["entries"] = new_entries
         env_toctree = list(app.env.tocs["index"].findall(ToctreeNode))[0]
         env_toctree["entries"] = new_entries
@@ -106,7 +106,7 @@ def add_master_file(app, config):
         headers = None
         readthedocs_token = os.environ.get("READTHEDOCS_TOKEN")
         if readthedocs_token:
-            headers = {"Authorization": f"Bearer {readthedocs_token}"}
+            headers = {"Authorization": f"Token {readthedocs_token}"}
 
         response = requests.get(toctree_source_url, headers=headers)
         response.raise_for_status()
