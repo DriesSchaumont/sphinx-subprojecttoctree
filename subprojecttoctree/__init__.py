@@ -102,7 +102,13 @@ def add_master_file(app, config):
         toctree_source_url = (
             f"{master_url}/{language}/" f"{version}/_sources/index.rst.txt"
         )
-        response = requests.get(toctree_source_url)
+
+        headers = None
+        readthedocs_token = os.environ.get("READTHEDOCS_TOKEN")
+        if readthedocs_token:
+            headers = {"Authorization": f"Bearer {readthedocs_token}"}
+
+        response = requests.get(toctree_source_url, headers=headers)
         response.raise_for_status()
         data = response.text
         with (src_dir / "master__.rst").open("w") as open_masterdoc:

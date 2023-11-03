@@ -181,6 +181,12 @@ yourself before building the documentation. The ``READTHEDOCS_LANGUAGE`` and ``R
 will default to ``en`` and ``latest``. To prevent you from doing this manually, you can add
 them to the Make files that are automatically created by ``sphinx-quickstart``.
 
+Private Documentation
+=====================
+This extension can be used with private Read the Docs pages by setting the environment
+variable ``READTHEDOCS_TOKEN``. This token is only used when building projects that are
+marked with ``is_subproject``.
+
 
 Creating links between the projects
 ===================================
