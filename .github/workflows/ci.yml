@@ -27,18 +27,18 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-        sphinx-version: ["sphinx70", "sphinx71", "sphinx72", "sphinx73", "sphinx74", "sphinx80", "sphinx81", "sphinx90"]
+        sphinx-version: ["sphinx80", "sphinx81", "sphinx90"]
         readthedocs-theme-version: ["theme200", "theme300"]
         sphinxextension: ["on", "off"]
         include:
         - os: macos-latest
           python-version: "3.10"
-          sphinx-version: sphinx70
+          sphinx-version: sphinx80
           readthedocs-theme-version: theme200
           sphinxextension: "on"
         - os: windows-latest
           python-version: "3.10"
-          sphinx-version: sphinx70
+          sphinx-version: sphinx80
           readthedocs-theme-version: theme200
           sphinxextension: "on"
 
