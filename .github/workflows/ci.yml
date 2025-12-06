@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:      
       matrix:
-        python-version: [3.8]
+        python-version: [3.10]
         tox-env: [docs, black, flake8]
     steps:
     - uses: actions/checkout@v3
@@ -26,19 +26,19 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        sphinx-version: ["sphinx44", "sphinx45", "sphinx50", "sphinx51", "sphinx52", "sphinx53"]
-        readthedocs-theme-version: [ "theme100", "theme110"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        sphinx-version: ["sphinx44", "sphinx45", "sphinx50", "sphinx51", "sphinx52", "sphinx53", "sphinx60", "sphinx61", "sphinx62", "sphinx70", "sphinx71", "sphinx72"]
+        readthedocs-theme-version: [ "theme100", "theme110", "theme120", "theme130", "theme200", "theme300"]
         sphinxextension: ["on", "off"]
         include:
         - os: macos-latest
-          python-version: 3.8
-          sphinx-version: sphinx44
+          python-version: 3.10
+          sphinx-version: sphinx50
           readthedocs-theme-version: theme100
           sphinxextension: "on"
         - os: windows-latest
-          python-version: 3.8
-          sphinx-version: sphinx44
+          python-version: 3.10
+          sphinx-version: sphinx50
           readthedocs-theme-version: theme100
           sphinxextension: "on"
 
