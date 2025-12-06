@@ -16,5 +16,6 @@ exclude = '''
   | build
   | dist
   | \.tox
+  | subprojecttoctree/__version__.py
 )
 '''
