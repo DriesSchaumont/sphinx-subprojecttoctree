@@ -177,14 +177,11 @@ def test_build_subproject_no_language(master_index, app):
 @pytest.mark.sphinx(
     "html",
     testroot="subprojecttoctree-subproject",
-    confoverrides={"html_theme": "sphinx_rtd_theme"},
+    confoverrides={"html_theme": "sphinx_rtd_theme", "main_project_index_filename": "index.md"},
 )
-def test_build_subproject_index_filename(app_params, make_app, master_index):
-    args, kwargs = app_params
-    app = make_app(*args, **kwargs)
-    app.config.main_project_index_filename = "index.md"
+def test_build_subproject_index_filename(master_index, app):
     app.build()
-    master_index.assert_called_once_with("http://example/en/latest/_sources/index.rst.txt")
+    master_index.assert_called_once_with("http://example/en/latest/_sources/index.md")
     assert app.env.toc_num_entries["index"] == 1
     assert app.env.toctree_includes["index"] == ["foo", "bar"]
     assert app.env.files_to_rebuild["foo"] == {"index"}
