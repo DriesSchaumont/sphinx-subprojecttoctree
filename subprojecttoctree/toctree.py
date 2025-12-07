@@ -51,10 +51,10 @@ class SubprojectTocTree(TocTree):
                 sys.exit(1)
             subproject_relative_path = subproject.group(1).strip()
             if subproject_relative_path:
-                ref = (
-                    f"{master_readthedocs_url}/projects/{subproject_relative_path}"
-                    f"/{language}/{version}/index.html"
-                )
+                ref = f"{master_readthedocs_url}/projects/{subproject_relative_path}/"
+                if language:
+                    ref += f"{language}/"
+                ref += f"{version}/index.html"
                 to_add_later[i] = (subproject_title, ref)
                 # Remove from self.content, but not from the parents.
                 # So we do not use self.content.remove()
