@@ -5,7 +5,7 @@ Changelog
 0.6.1 (TBD)
 -----------
 
-* Allow `READTHEDOCS_LANGUAGE`` to be set to an empty string (:pr:`82`)
+* Allow `READTHEDOCS_LANGUAGE` to be set to an empty string (:pr:`82`)
 
 0.6.0 (07/12/2025)
 ------------------
