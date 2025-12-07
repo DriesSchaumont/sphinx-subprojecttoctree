@@ -15,7 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
-from importlib.metadata import version;
+from importlib.metadata import version
 
 # -- Project information -----------------------------------------------------
 
