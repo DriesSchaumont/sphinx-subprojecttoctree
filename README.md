@@ -29,7 +29,7 @@ More information can be found in the
 This project is a plugin for [Sphinx](https://www.sphinx-doc.org).  
 
 ## Python version support
-Python 3.8, 3.9 and 3.10 are officially supported.
+Python 3.10 and up are officially supported.
 
 ## Running the tests
 To run the tests, execute ``tox``.
