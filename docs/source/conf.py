@@ -15,7 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
-from pkg_resources import get_distribution
+from importlib.metadata import version
 
 # -- Project information -----------------------------------------------------
 
@@ -26,7 +26,7 @@ author = "Dries Schaumont"
 
 # The full version, including alpha/beta/rc tags
 
-release = get_distribution("sphinx-subprojecttoctree").version
+release = version("sphinx-subprojecttoctree")
 if os.environ.get("READTHEDOCS") == "True":
     version = ".".join(release.split(".")[:2])
 else:

@@ -7,7 +7,7 @@ write_to = "subprojecttoctree/__version__.py"
 
 
 [tool.black]
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
 exclude = '''
 (
   \.egg
@@ -16,5 +16,6 @@ exclude = '''
   | build
   | dist
   | \.tox
+  | subprojecttoctree/__version__.py
 )
 '''

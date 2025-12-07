@@ -2,8 +2,12 @@
 Changelog
 *********
 
-0.5.5 (in development)
-----------------------
+0.6.0 (07/12/2025)
+------------------
+* Add support for sphinx 8.0 (:pr:`81`)
+* Dropped support for python 3.8 and 3.9 (:pr:`81`)
+* The minimal required sphinx version is now `7.0.x` (:pr:`81`)
+* Bump requests to `2.32.5` (:pr:`81`)
 
 0.5.4 (25/08/2023)
 ------------------

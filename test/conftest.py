@@ -20,8 +20,8 @@ collect_ignore = ["root"]
 
 def pytest_configure(config):
     markers = [
-        "disable_env: disable setting the READTHEDOCS_PROJECT environment variable."
-        "do_not_patch_connection: do not patch socket.create_connection (it is patched by default in tests to skip internet availability check)."
+        "disable_env: disable setting the READTHEDOCS_PROJECT environment variable.",
+        "do_not_patch_connection: do not patch socket.create_connection (it is patched by default in tests to skip internet availability check).",
     ]
     for marker in markers:
         config.addinivalue_line(
