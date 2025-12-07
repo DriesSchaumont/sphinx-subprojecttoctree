@@ -45,11 +45,11 @@ def add_master_toctree_to_index(app, doctree):
         language = os.getenv("READTHEDOCS_LANGUAGE", default="en")
         version = os.getenv("READTHEDOCS_VERSION", default="latest")
         master_readthedocs_url = get_normalized_master_url(app.config)
-        this_subproject_url = urlparse(
-            f"{master_readthedocs_url}/projects/"
-            f"{subproject_name}/"
-            f"{language}/{version}/index.html"
-        )
+        this_subproject_url = f"{master_readthedocs_url}/projects/{subproject_name}/"
+        if language:
+            this_subproject_url += f"{language}/"
+        this_subproject_url += f"{version}/index.html"
+        this_subproject_url = urlparse(this_subproject_url)
         toctree = find_first_toctree(doctree, is_root_index=False)
         new_entries = []
         last_master_entry = None
@@ -97,11 +97,12 @@ def add_master_file(app, config):
     src_dir = Path(app.srcdir)
     if is_subproject(config):
         master_url = get_normalized_master_url(config)
+        toctree_source_url = f"{master_url}/"
         language = os.getenv("READTHEDOCS_LANGUAGE", default="en")
         version = os.getenv("READTHEDOCS_VERSION", default="latest")
-        toctree_source_url = (
-            f"{master_url}/{language}/" f"{version}/_sources/index.rst.txt"
-        )
+        if language:
+            toctree_source_url += f"{language}/"
+        toctree_source_url += f"{version}/_sources/index.rst.txt"
         response = requests.get(toctree_source_url)
         response.raise_for_status()
         data = response.text

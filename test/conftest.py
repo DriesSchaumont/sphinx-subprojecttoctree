@@ -20,7 +20,8 @@ collect_ignore = ["root"]
 
 def pytest_configure(config):
     markers = [
-        "disable_env: disable setting the READTHEDOCS_PROJECT environment variable.",
+        "disable_readthedocs_project_env: disable setting the READTHEDOCS_PROJECT environment variable.",
+        "disable_readthedocs_language_env: disable setting the READTHEDOCS_LANGUAGE environment variable."
         "do_not_patch_connection: do not patch socket.create_connection (it is patched by default in tests to skip internet availability check).",
     ]
     for marker in markers:
@@ -36,12 +37,21 @@ def rootdir():
 
 
 @pytest.fixture(autouse=True)
-def mock_settings_env_vars(request):
-    env_vars_marker = request.node.get_closest_marker("disable_env")
+def mock_readthedocs_project_env_var(request):
+    env_vars_marker = request.node.get_closest_marker("disable_readthedocs_project_env")
     if not env_vars_marker:
         with mock.patch.dict(os.environ, {"READTHEDOCS_PROJECT": "foo"}):
             yield
     else:
+        yield
+
+
+@pytest.fixture(autouse=True)
+def mock_readthedocs_lang_empty(request):
+    disable_marker = request.node.get_closest_marker("disable_readthedocs_language_env")
+    with mock.patch.dict(
+        os.environ, {"READTHEDOCS_LANGUAGE": "en" if not disable_marker else ""}
+    ):
         yield
 
 
@@ -75,7 +85,7 @@ def mock_internet_connection(mocker, request):
 
 
 @pytest.fixture
-def master_index(mocker):
+def master_index_return(mocker):
     master_index = dedent(
         """\
                           Dolor sit
@@ -89,6 +99,11 @@ def master_index(mocker):
     )
     mocked_response = mocker.Mock()
     mocked_response.text = master_index
-    mocked_request = mocker.patch("requests.get")
-    mocked_request.return_value = mocked_response
     return mocked_response
+
+
+@pytest.fixture
+def master_index(mocker, master_index_return):
+    mocked_request = mocker.patch("requests.get")
+    mocked_request.return_value = master_index_return
+    return mocked_request

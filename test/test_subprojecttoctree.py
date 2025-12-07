@@ -44,6 +44,44 @@ def test_build_master_doc(app):
     ]
 
 
+@pytest.mark.disable_readthedocs_language_env
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-master",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_build_master_doc_no_language(app):
+    app.build()
+    index_toctree = app.env.tocs["index"]
+    assert_node(index_toctree, [bullet_list, ([toctree])])
+    assert_node(
+        index_toctree[0],
+        toctree,
+        entries=[
+            (None, "foo"),
+            (None, "bar"),
+            ("SubprojectTitle", "http://example/projects/lorem/latest/index.html"),
+        ],
+        includefiles=["foo", "bar"],
+    )
+
+    assert app.env.toc_num_entries["index"] == 0
+    assert app.env.toctree_includes["index"] == [
+        "foo",
+        "bar",
+        "http://example/projects/lorem/latest/index.html",
+    ]
+    assert app.env.files_to_rebuild["foo"] == {"index"}
+    assert app.env.files_to_rebuild["bar"] == {"index"}
+    assert app.env.glob_toctrees == set()
+    assert app.env.numbered_toctrees == set()
+    assert index_toctree[0]["entries"] == [
+        (None, "foo"),
+        (None, "bar"),
+        ("SubprojectTitle", "http://example/projects/lorem/latest/index.html"),
+    ]
+
+
 @pytest.mark.sphinx(
     "html",
     testroot="subprojecttoctree-master-with-regular-http-url",
@@ -123,6 +161,17 @@ def test_build_master_doc_with_entry_after_subproject(app):
         ("SubprojectTitle", "http://example/projects/lorem/en/latest/index.html"),
         (None, "ipsum"),
     ]
+
+
+@pytest.mark.disable_readthedocs_language_env
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
+    confoverrides={"html_theme": "sphinx_rtd_theme"},
+)
+def test_build_subproject_no_language(master_index, app):
+    app.build()
+    master_index.assert_called_once_with("http://example/latest/_sources/index.rst.txt")
 
 
 @pytest.mark.sphinx(
@@ -539,7 +588,7 @@ def test_build_no_working_internet_connection(app_params, make_app, mocker, capl
     ]
 
 
-@pytest.mark.disable_env
+@pytest.mark.disable_readthedocs_project_env
 @pytest.mark.sphinx(
     "html",
     testroot="subprojecttoctree-subproject",
