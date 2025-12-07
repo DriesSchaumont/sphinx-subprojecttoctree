@@ -6,6 +6,8 @@ Changelog
 -----------
 
 * Allow `READTHEDOCS_LANGUAGE` to be set to an empty string (:pr:`82`)
+* Add `main_project_index_filename` config value that allows customization of the index filename for the remote main project (:pr:`83`)
+
 
 0.6.0 (07/12/2025)
 ------------------
