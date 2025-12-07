@@ -177,7 +177,10 @@ def test_build_subproject_no_language(master_index, app):
 @pytest.mark.sphinx(
     "html",
     testroot="subprojecttoctree-subproject",
-    confoverrides={"html_theme": "sphinx_rtd_theme", "main_project_index_filename": "index.md"},
+    confoverrides={
+        "html_theme": "sphinx_rtd_theme",
+        "main_project_index_filename": "index.md",
+    },
 )
 def test_build_subproject_index_filename(master_index, app):
     app.build()
@@ -221,6 +224,7 @@ def test_build_subproject_index_filename(master_index, app):
         ],
         rawentries=["explicit_ref"],
     )
+
 
 @pytest.mark.sphinx(
     "html",

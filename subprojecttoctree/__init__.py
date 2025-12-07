@@ -142,7 +142,9 @@ def setup(app):
         sys.exit(1)
     app.add_config_value("readthedocs_url", None, "env", types=[str])
     app.add_config_value("is_subproject", None, "env", types=[bool])
-    app.add_config_value("main_project_index_filename", "index.rst.txt", "env", types=[str])
+    app.add_config_value(
+        "main_project_index_filename", "index.rst.txt", "env", types=[str]
+    )
     app.add_directive("subprojecttoctree", SubprojectTocTree)
     app.connect("env-get-outdated", always_read_index)
     app.connect("env-before-read-docs", read_master_first)
