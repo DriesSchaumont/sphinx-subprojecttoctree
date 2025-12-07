@@ -177,6 +177,58 @@ def test_build_subproject_no_language(master_index, app):
 @pytest.mark.sphinx(
     "html",
     testroot="subprojecttoctree-subproject",
+    confoverrides={
+        "html_theme": "sphinx_rtd_theme",
+        "main_project_index_filename": "index.md",
+    },
+)
+def test_build_subproject_index_filename(master_index, app):
+    app.build()
+    master_index.assert_called_once_with("http://example/en/latest/_sources/index.md")
+    assert app.env.toc_num_entries["index"] == 1
+    assert app.env.toctree_includes["index"] == ["foo", "bar"]
+    assert app.env.files_to_rebuild["foo"] == {"index"}
+    assert app.env.files_to_rebuild["bar"] == {"index"}
+    assert app.env.glob_toctrees == set()
+    assert app.env.numbered_toctrees == set()
+
+    index_toctree = app.env.tocs["index"]
+    assert_node(
+        index_toctree,
+        [bullet_list, ([list_item, (compact_paragraph, [bullet_list, (toctree)])])],
+    )
+    assert_node(index_toctree[0][0], [compact_paragraph, reference, "Lorem Ipsum"])
+    assert_node(index_toctree[0][0][0], reference, anchorname="")
+    assert_node(
+        index_toctree[0][1][0],
+        toctree,
+        caption=None,
+        glob=False,
+        hidden=False,
+        includehidden=False,
+        titlesonly=False,
+        maxdepth=-1,
+        entries=[
+            (None, "http://example/en/latest/amet.html"),
+            (None, "http://example/en/latest/sed.html"),
+            (None, "foo"),
+            (None, "bar"),
+            ("explicit_ref", "http://example.org"),
+        ],
+        numbered=0,
+        includefiles=[
+            "foo",
+            "bar",
+            "http://example/en/latest/amet.html",
+            "http://example/en/latest/sed.html",
+        ],
+        rawentries=["explicit_ref"],
+    )
+
+
+@pytest.mark.sphinx(
+    "html",
+    testroot="subprojecttoctree-subproject",
     confoverrides={"html_theme": "sphinx_rtd_theme"},
 )
 def test_build_subproject(master_index, app):
