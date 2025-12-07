@@ -100,9 +100,10 @@ def add_master_file(app, config):
         toctree_source_url = f"{master_url}/"
         language = os.getenv("READTHEDOCS_LANGUAGE", default="en")
         version = os.getenv("READTHEDOCS_VERSION", default="latest")
+        index_filename = config.main_project_index_filename
         if language:
             toctree_source_url += f"{language}/"
-        toctree_source_url += f"{version}/_sources/index.rst.txt"
+        toctree_source_url += f"{version}/_sources/{index_filename}"
         response = requests.get(toctree_source_url)
         response.raise_for_status()
         data = response.text
@@ -141,6 +142,7 @@ def setup(app):
         sys.exit(1)
     app.add_config_value("readthedocs_url", None, "env", types=[str])
     app.add_config_value("is_subproject", None, "env", types=[bool])
+    app.add_config_value("main_project_index_filename", "index.rst.txt", "env", types=[str])
     app.add_directive("subprojecttoctree", SubprojectTocTree)
     app.connect("env-get-outdated", always_read_index)
     app.connect("env-before-read-docs", read_master_first)
